@@ -1,14 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Thu May 13 19:51:45 2021
-
-@author: jialiu
-"""
-
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
 Created on Tue Apr 27 15:22:39 2021
 
 @author: jialiu
@@ -23,13 +15,17 @@ augmented variable of length --r
  
 import numpy as np 
 from  PN_Bayes import *
-from  PNcov import *
 import pickle
 import time   
 import argparse
+from scipy.stats import norm as normal
 import pdb
 #run python
+#for |\bm xi| = 5
 #python3 main.py  large 8 20000 5000 --Initials_xi 30 3 0.5 6 15 1.0 --Initials_g -18 0 0  --directory results --rstname tk03_test_large
+#or |\bm xi| = 6
+#python3 main.py  large 8 20000 5000 --Initials_xi 30 3 0.5 6 15 1.0 3.0 --Initials_g -18 0 0 --beta_model rv --directory results --rstname tk03_test_large_betarv
+
 
 #---data_name ----name of user's data, we need data--- unit (spherical) directional data in cartesian coordinate, and lat --- latitude to run the code
 #---degree------- degree in SH, l, we use a (default) value is 8, here is an input 
@@ -312,10 +308,8 @@ def update_Sigma_AM_onestp2(Y,  mu,  lat, degree,  cof_K, sig10_2, sig11_2,sig20
         sampXI[j] = xi_j  
         #print(xi_j,j)
         #print(xi_j)
-        logMHrat  = log_lik_diff(uvec, cof_K, sampXI, x0 )    
-         
-        MHrat = np.exp(logMHrat) 
-         
+        logMHrat  = log_lik_diff(uvec, cof_K, sampXI, x0 )             
+        MHrat = np.exp(logMHrat)          
         vrat = np.random.uniform(0,1)          
         if  (MHrat >  vrat):
             x0[j] = xi_j     
@@ -538,9 +532,6 @@ MCpost_sig_l_02 = np.mean(sig_l_02_samp[burnin:-1], axis=0)
 end = time.time()
 runtime = end - start
 print(runtime)
-    
-    
-    
 
 Filename=directory + "/" + rstname  +"."+fileformat
 with open(Filename,  'wb') as f: 
